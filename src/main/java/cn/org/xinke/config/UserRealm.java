@@ -10,6 +10,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
+
 /*
  * @author yangyang
  * @date 2023/3/23 16:58
@@ -38,12 +39,11 @@ public class UserRealm extends AuthorizingRealm {
     //认证
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.println("执行了==>认证doGetAuthenticationInfo");
 
         //获取登录用户的令牌，名字
         UsernamePasswordToken authenticationToken1 = (UsernamePasswordToken) authenticationToken;
         //连接数据库真实数据：用户名 密码
-        User user = new User("root","123456");
+        User user = LocalUserConfig.getUser(authenticationToken1.getUsername());
         //判断数据库查询出来的不为空，为空则返回报错
         if(user==null){
             return null;

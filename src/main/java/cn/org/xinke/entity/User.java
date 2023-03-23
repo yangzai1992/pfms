@@ -32,6 +32,12 @@ public class User {
         this.pwd = pwd;
     }
 
+    public User(String uname, String pwd, List<String> permsList) {
+        this.uname = uname;
+        this.pwd = pwd;
+        this.permsList = permsList;
+    }
+
     public String getUname() {
         return uname;
     }
