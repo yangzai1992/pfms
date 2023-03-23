@@ -20,6 +20,7 @@
 *.rar
 
 /out
+/target
 /build
 /.idea
 /.gradle
