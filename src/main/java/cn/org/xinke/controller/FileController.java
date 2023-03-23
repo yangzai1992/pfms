@@ -7,6 +7,12 @@ import cn.org.xinke.util.CacheUtil;
 import cn.org.xinke.util.FileTypeUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -76,10 +82,25 @@ public class FileController {
      */
     @PostMapping("/auth")
     public String auth(User user, HttpSession session) {
-        if (user.getUname().equals(uname) && user.getPwd().equals(pwd)) {
+        Subject userSubject = SecurityUtils.getSubject();
+        String result;
+        UsernamePasswordToken token = new UsernamePasswordToken(user.getUname(), user.getPwd());
+        try {
+            // 登录验证
+            userSubject.login(token);
             session.setAttribute( "LOGIN_USER", user );
+            result = "登录成功：" + user.getUname();
             return "redirect:/";
+        } catch (UnknownAccountException e) {
+            result = "账号不存在";
+        } catch (DisabledAccountException e) {
+            result = "账户失效";
+        } catch (IncorrectCredentialsException e) {
+            result =  "密码错误";
+        } catch (Throwable e) {
+            result = "其它异常：" + e.getMessage();
         }
+        System.out.println(result);
         return "redirect:/login";
     }
 

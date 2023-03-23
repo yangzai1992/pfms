@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author cinco
  * @date 2019-1-21
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class LoginAspect {
 
     @Pointcut("execution(public * cn.org.xinke.controller.*.*(..)) && @annotation(cn.org.xinke.annotation.Login)")
