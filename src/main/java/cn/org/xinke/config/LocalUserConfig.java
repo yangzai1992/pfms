@@ -28,9 +28,10 @@ public class LocalUserConfig {
         //初始化角色与权限
         String roles = propertiesLoader.getProperty(ROLES);
         HashMap<String,List<String>> rolePermsMap = new HashMap<>();
+        Set<String> rolesSet = new HashSet<>();
         if(StringUtils.isNotBlank(roles)){
-            String[] rolesList = roles.split(SPLIT_SEPARATOR);
-            for (String role : rolesList) {
+            rolesSet.addAll(Arrays.asList(roles.split(SPLIT_SEPARATOR)));
+            for (String role : rolesSet) {
                 String rolePerms = propertiesLoader.getProperty(PERMS_PREFIX + role);
                 if(StringUtils.isNotBlank(rolePerms)){
                     rolePermsMap.put(role,Arrays.asList(rolePerms.split(SPLIT_SEPARATOR)));
@@ -51,18 +52,23 @@ public class LocalUserConfig {
                 String account = name.substring(USER_PREFIX.length());
                 String roleOrPerms = propertiesLoader.getProperty(ALLOC_PREFIX + account);
                 if(StringUtils.isNotBlank(roleOrPerms)){
-                    ArrayList<String> permsList = new ArrayList<>();
+                    Set<String> permsList = new HashSet<>();
+                    Set<String> roleList = new HashSet<>();
                     for (String roleOrPerm : roleOrPerms.split(SPLIT_SEPARATOR)) {
                         List<String> permsMap = rolePermsMap.get(roleOrPerm);
                         //判断是否为角色
-                        if(permsMap != null && !permsMap.isEmpty()){
-                            permsList.addAll(permsMap);
+                        if(rolesSet.contains(roleOrPerm)){
+                            //添加角色
+                            roleList.add(roleOrPerm);
+                            if(permsMap != null && !permsMap.isEmpty()){
+                                permsList.addAll(permsMap);
+                            }
                         }else{
                             //认为是权限标记
                             permsList.add(roleOrPerm);
                         }
                     }
-                    userHashMap.put(account,new User(account,password,permsList));
+                    userHashMap.put(account,new User(account,password,roleList,permsList));
                 }else{
                     userHashMap.put(account,new User(account,password));
                 }

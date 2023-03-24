@@ -1,6 +1,6 @@
 package cn.org.xinke.entity;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @description 账户实体
@@ -19,9 +19,13 @@ public class User {
      */
     private String pwd;
     /**
+     * 角色
+     */
+    private Set<String> roleSet;
+    /**
      * 权限
      */
-    private List<String> permsList;
+    private Set<String> permsSet;
 
 
     public User() {
@@ -32,10 +36,11 @@ public class User {
         this.pwd = pwd;
     }
 
-    public User(String uname, String pwd, List<String> permsList) {
+    public User(String uname, String pwd, Set<String> roleSet, Set<String> permsSet) {
         this.uname = uname;
         this.pwd = pwd;
-        this.permsList = permsList;
+        this.roleSet = roleSet;
+        this.permsSet = permsSet;
     }
 
     public String getUname() {
@@ -54,11 +59,19 @@ public class User {
         this.pwd = pwd;
     }
 
-    public List<String> getPermsList() {
-        return permsList;
+    public Set<String> getRoleSet() {
+        return roleSet;
     }
 
-    public void setPermsList(List<String> permsList) {
-        this.permsList = permsList;
+    public void setRoleSet(Set<String> roleSet) {
+        this.roleSet = roleSet;
+    }
+
+    public Set<String> getPermsSet() {
+        return permsSet;
+    }
+
+    public void setPermsSet(Set<String> permsSet) {
+        this.permsSet = permsSet;
     }
 }

@@ -25,6 +25,7 @@ public enum FileTypeEnum {
     FLASH("flash"),
     ZIP("zip"),
     RAR("rar"),
+    JAR("jar"),
     SEVENZ("7z"),
     AUDIO("audio"),
     MP3("mp3"),
@@ -32,6 +33,8 @@ public enum FileTypeEnum {
     MP4("mp4"),
     FILE("file"),
     IMAGE("image"),
+    JPG("jpg"),
+    PNG("png"),
     APPLICATION("application");
 
     private String name;

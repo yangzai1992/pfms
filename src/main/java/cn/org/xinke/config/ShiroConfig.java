@@ -9,6 +9,7 @@ package cn.org.xinke.config;
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +52,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/auth", "anon");       // 允许匿名访问
         filterChainDefinitionMap.put("/logout", "logout");   //登出
         filterChainDefinitionMap.put("/assets/**/**", "anon");  // 允许匿名访问
+        filterChainDefinitionMap.put("/share/**", "anon");  // 允许匿名访问
         filterChainDefinitionMap.put("/**", "authc");           // 进行身份认证后才能访问
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
@@ -58,12 +60,19 @@ public class ShiroConfig {
     }
 
 
-    @Bean//@Qualifier("userRealm")和userRealm关联
+    @Bean
     public DefaultWebSecurityManager defaultWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm){
         DefaultWebSecurityManager defaultWebSecurityManager=new DefaultWebSecurityManager();
+        defaultWebSecurityManager.setSessionManager(sessionManager());
         //关联userRealm
         defaultWebSecurityManager.setRealm(userRealm);
         return defaultWebSecurityManager;
+    }
+    @Bean
+    public DefaultWebSessionManager sessionManager(){
+        DefaultWebSessionManager defaultWebSessionManager=new DefaultWebSessionManager();
+        defaultWebSessionManager.setSessionIdCookieEnabled(true);
+        return defaultWebSessionManager;
     }
 
     //创建realm 对象 ，需要自定义类

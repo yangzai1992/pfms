@@ -30,8 +30,10 @@ public class UserRealm extends AuthorizingRealm {
         Subject subject = SecurityUtils.getSubject();
         //拿到student对象
         User currentStudent = (User) subject.getPrincipal();
+        //添加角色
+        info.addStringPermissions(currentStudent.getRoleSet());
         //添加权限访问
-        info.addStringPermissions(currentStudent.getPermsList());
+        info.addStringPermissions(currentStudent.getPermsSet());
 
         return info;
     }
@@ -50,7 +52,7 @@ public class UserRealm extends AuthorizingRealm {
         }
         Subject currentSubject = SecurityUtils.getSubject();
         Session session = currentSubject.getSession();
-        session.setAttribute("loginStudent",user);
+        session.setAttribute("user",user);
 
         //密码认证，shiro自己判断
         return new SimpleAuthenticationInfo(user,user.getPwd(),"");

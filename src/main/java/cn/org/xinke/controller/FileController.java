@@ -7,6 +7,7 @@ import cn.org.xinke.util.CacheUtil;
 import cn.org.xinke.util.FileTypeUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -101,6 +102,13 @@ public class FileController {
             result = "其它异常：" + e.getMessage();
         }
         System.out.println(result);
+        return "redirect:/login";
+    }
+
+    @RequestMapping("/logout")
+    public String logout(){
+        Subject userSubject = SecurityUtils.getSubject();
+        userSubject.logout();
         return "redirect:/login";
     }
 
@@ -417,7 +425,8 @@ public class FileController {
             type = FileTypeEnum.TXT.getName();
         } else if (FileTypeEnum.SWF.getName().equalsIgnoreCase(suffix)) {
             type = FileTypeEnum.FLASH.getName();
-        } else if (FileTypeEnum.ZIP.getName().equalsIgnoreCase(suffix) || FileTypeEnum.RAR.getName().equalsIgnoreCase(suffix) || FileTypeEnum.SEVENZ.getName().equalsIgnoreCase(suffix)) {
+        } else if (FileTypeEnum.ZIP.getName().equalsIgnoreCase(suffix) || FileTypeEnum.RAR.getName().equalsIgnoreCase(suffix) ||
+                FileTypeEnum.SEVENZ.getName().equalsIgnoreCase(suffix) || FileTypeEnum.JAR.getName().equalsIgnoreCase(suffix)) {
             type = FileTypeEnum.ZIP.getName();
         } else if (contentType != null && contentType.startsWith(FileTypeEnum.AUDIO.getName() + SLASH)) {
             type = FileTypeEnum.MP3.getName();
@@ -470,6 +479,8 @@ public class FileController {
                 m.put( "name", f.getName() );
                 // 修改时间
                 m.put( "updateTime", f.lastModified() );
+                m.put( "updateTimeStr", DateFormatUtils.format(f.lastModified(),"yyyy-MM-dd HH:mm:ss") );
+                m.put( "fileSize", FileTypeUtil.formatSize(f.length()));
                 // 是否是目录
                 m.put( "isDir", f.isDirectory() );
                 if (f.isDirectory()) {
@@ -519,6 +530,7 @@ public class FileController {
                         // 缩略图地址
                         m.put( "smUrl", smUrl );
                     }
+                    m.put( "fileSuffix", suffix);
                 }
                 dataList.add(m);
             }
